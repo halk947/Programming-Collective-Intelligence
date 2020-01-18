@@ -1,23 +1,40 @@
 # 一个涉及影评者及其对几部影片评分情况的字典
-critics = {'Lisa Rose': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
-                         'Just My Luck': 3.0, 'Superman Returns': 3.5, 'You, Me and Dupree': 2.5,
-                         'The Night Listener': 3.0},
-           'Gene Seymour': {'Lady in the Water': 3.0, 'Snakes on a Plane': 3.5,
-                            'Just My Luck': 1.5, 'Superman Returns': 5.0, 'The Night Listener': 3.0,
-                            'You, Me and Dupree': 3.5},
-           'Michael Phillips': {'Lady in the Water': 2.5, 'Snakes on a Plane': 3.0,
-                                'Superman Returns': 3.5, 'The Night Listener': 4.0},
-           'Claudia Puig': {'Snakes on a Plane': 3.5, 'Just My Luck': 3.0,
-                            'The Night Listener': 4.5, 'Superman Returns': 4.0,
-                            'You, Me and Dupree': 2.5},
-           'Mick LaSalle': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0,
-                            'Just My Luck': 2.0, 'Superman Returns': 3.0, 'The Night Listener': 3.0,
-                            'You, Me and Dupree': 2.0},
-           'Jack Matthews': {'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0,
-                             'The Night Listener': 3.0, 'Superman Returns': 5.0, 'You, Me and Dupree': 3.5},
-           'Toby': {'Snakes on a Plane': 4.5, 'You, Me and Dupree': 1.0, 'Superman Returns': 4.0}}
-
 from math import sqrt
+critics = {
+    'Lisa Rose': {
+        'Lady in the Water': 2.5, 'Snakes on a Plane': 3.5,
+        'Just My Luck': 3.0, 'Superman Returns': 3.5,
+        'You, Me and Dupree': 2.5, 'The Night Listener': 3.0
+    },
+    'Gene Seymour': {
+        'Lady in the Water': 3.0, 'Snakes on a Plane': 3.5,
+        'Just My Luck': 1.5, 'Superman Returns': 5.0,
+        'The Night Listener': 3.0, 'You, Me and Dupree': 3.5
+    },
+    'Michael Phillips': {
+        'Lady in the Water': 2.5, 'Snakes on a Plane': 3.0,
+        'Superman Returns': 3.5, 'The Night Listener': 4.0
+    },
+    'Claudia Puig': {
+        'Snakes on a Plane': 3.5, 'Just My Luck': 3.0,
+        'The Night Listener': 4.5, 'Superman Returns': 4.0,
+        'You, Me and Dupree': 2.5
+    },
+    'Mick LaSalle': {
+        'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0,
+        'Just My Luck': 2.0, 'Superman Returns': 3.0,
+        'The Night Listener': 3.0, 'You, Me and Dupree': 2.0
+    },
+    'Jack Matthews': {
+        'Lady in the Water': 3.0, 'Snakes on a Plane': 4.0,
+        'The Night Listener': 3.0, 'Superman Returns': 5.0,
+        'You, Me and Dupree': 3.5
+    },
+    'Toby': {
+        'Snakes on a Plane': 4.5, 'You, Me and Dupree': 1.0,
+        'Superman Returns': 4.0
+    }
+}
 
 
 # 返回一个有关person1与person2的基于距离的相似度评价
@@ -98,7 +115,8 @@ def getRecommendations(prefs, person, similarity=sim_pearson):
         sim = similarity(prefs, person, other)
 
         # ignore scores of zero or lower
-        if sim <= 0: continue
+        if sim <= 0:
+            continue
         for item in prefs[other]:
             # only score movies I haven't seen yet
             if item not in prefs[person] or prefs[person][item] == 0:
@@ -110,7 +128,8 @@ def getRecommendations(prefs, person, similarity=sim_pearson):
                 simSums[item] += sim
 
     # Create the normalized list
-    rankings = [(total / simSums[item], item) for item, total in totals.items()]
+    rankings = [(total / simSums[item], item)
+                for item, total in totals.items()]
 
     # Return the sorted list
     rankings.sort()
@@ -159,7 +178,8 @@ def getRecommendedItems(prefs, itemMatch, user):
         for (similarity, item2) in itemMatch[item]:
 
             # Ignore if this user has already rated this item
-            if item2 in userRatings: continue
+            if item2 in userRatings:
+                continue
             # Weighted sum of rating times similarity
             scores.setdefault(item2, 0)
             scores[item2] += similarity * rating
@@ -168,7 +188,8 @@ def getRecommendedItems(prefs, itemMatch, user):
             totalSim[item2] += similarity
 
     # Divide each total score by total weighting to get an average
-    rankings = [(score / totalSim[item], item) for item, score in scores.items()]
+    rankings = [(score / totalSim[item], item)
+                for item, score in scores.items()]
 
     # Return the rankings from highest to lowest
     rankings.sort()
